@@ -74,9 +74,12 @@ module SVG
         else
           maxvalue += range / 20.0
         end
-        scale_range = maxvalue - minvalue
+        unrounded_tick_size = range / 10
+        x = (Math.log10(unrounded_tick_size) - 1 ).ceil
+        pow10x = 10 ** x
+        @y_scale_division = (unrounded_tick_size / pow10x).ceil * pow10x
 
-        @y_scale_division = scale_divisions || (scale_range / 10.0)
+        @y_scale_division = scale_divisions if scale_divisions
 
         if scale_integers
           @y_scale_division = @y_scale_division < 1 ? 1 : @y_scale_division.round
@@ -96,7 +99,7 @@ module SVG
 
       def draw_data
         minvalue = min_value
-        fieldwidth = field_width
+        fieldwidth = field_width * 0.8
 
         unit_size = field_height
         bargap = bar_gap ? (fieldwidth < 10 ? fieldwidth / 2 : 10) : 0
@@ -120,6 +123,7 @@ module SVG
             value = dataset[:data][i] / @y_scale_division.to_f
 
             left = (fieldwidth * field_count)
+            left += (field_width/@data.length * 0.2) * (dataset_count+1)
 
             length = (value.abs - (minvalue > 0 ? minvalue : 0)) * unit_size
             # top is 0 if value is negative

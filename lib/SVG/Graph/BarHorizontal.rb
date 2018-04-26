@@ -75,11 +75,13 @@ module SVG
       def get_x_labels
         maxvalue = max_value
         minvalue = min_value
-        range = maxvalue - minvalue
-        top_pad = range == 0 ? 10 : range / 20.0
-        scale_range = (maxvalue + top_pad) - minvalue
+        range = maxvalue  - minvalue
+        unrounded_tick_size = range / 10
+        x = (Math.log10(unrounded_tick_size) - 1).ceil
+        pow10x = 10 ** x
+        @x_scale_division = (unrounded_tick_size / pow10x).ceil * pow10x
 
-        @x_scale_division = scale_divisions || (scale_range / 10.0)
+        @x_scale_division = scale_divisions if scale_divisions
 
         if scale_integers
           @x_scale_division = @x_scale_division < 1 ? 1 : @x_scale_division.round
@@ -103,7 +105,7 @@ module SVG
 
       def draw_data
         minvalue = min_value
-        fieldheight = field_height
+        fieldheight = field_height * 0.8
 
         bargap = bar_gap ? (fieldheight < 10 ? fieldheight / 2 : 10) : 0
 
@@ -117,7 +119,8 @@ module SVG
           for dataset in @data
             value = dataset[:data][i]
 
-            top = @graph_height - (fieldheight * field_count) + bargap
+            top = @graph_height - (field_height * field_count) + bargap
+            top += (field_height/@data.length * 0.2) * dataset_count
             top += (bar_height * dataset_count) if stack == :side
             # cases (assume 0 = +ve):
             #   value  min  length          left

@@ -567,13 +567,13 @@ module SVG
         })
 
         # Background
-        @graph.add_element( "rect", {
-          "x" => "0",
-          "y" => "0",
-          "width" => @graph_width.to_s,
-          "height" => @graph_height.to_s,
-          "class" => "graphBackground"
-        })
+        # @graph.add_element( "rect", {
+        #   "x" => "0",
+        #   "y" => "0",
+        #   "width" => @graph_width.to_s,
+        #   "height" => @graph_height.to_s,
+        #   "class" => "graphBackground"
+        # })
 
         draw_x_axis
         draw_y_axis
@@ -735,7 +735,7 @@ module SVG
             text.attributes["y"] = y.to_s
             if rotate_x_labels
               text.attributes["transform"] =
-                "rotate( 90 #{x} #{y-x_label_font_size} )"+
+                "rotate( 45 #{x} #{y-x_label_font_size} )"+
                 " translate( 0 -#{x_label_font_size/4} )"
               text.attributes["style"] = "text-anchor: start"
             else
