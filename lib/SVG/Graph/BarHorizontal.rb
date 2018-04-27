@@ -91,7 +91,7 @@ module SVG
         #if maxvalue%@x_scale_division != 0
         #  maxvalue = maxvalue + @x_scale_division
         #end
-        minvalue.step( maxvalue, @x_scale_division ) {|v| rv << v}
+        minvalue.step( maxvalue, @x_scale_division ) {|v| rv << separate_comma(v)}
         return rv
       end
 

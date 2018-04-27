@@ -63,6 +63,10 @@ module SVG
         return min
       end
 
+      def separate_comma(number)
+        number.to_i.to_s.chars.to_a.reverse.each_slice(3).map(&:join).join(",").reverse
+      end
+
       def get_css
         return <<EOL
 /* default fill styles for multiple datasets (probably only use a single dataset on this graph though) */
