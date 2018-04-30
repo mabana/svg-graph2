@@ -68,12 +68,6 @@ module SVG
         maxvalue = max_value
         minvalue = min_value
         range = maxvalue - minvalue
-        # add some padding on top of the graph
-        if range == 0
-          maxvalue += 10
-        else
-          maxvalue += range / 20.0
-        end
         unrounded_tick_size = range / 10
         x = (Math.log10(unrounded_tick_size) - 1 ).ceil
         pow10x = 10 ** x
@@ -88,6 +82,9 @@ module SVG
         rv = []
         if maxvalue%@y_scale_division != 0
           maxvalue = maxvalue + @y_scale_division
+        end
+        if minvalue < 0
+          minvalue = @override_minvalue = -(@y_scale_division * (minvalue.abs / @y_scale_division).ceil)
         end
         minvalue.step( maxvalue, @y_scale_division ) {|v| rv << separate_comma(v)}
         return rv
@@ -120,14 +117,14 @@ module SVG
             #    +ve   -ve  value - 0
             #    -ve   -ve  value.abs - 0
 
-            value = dataset[:data][i] / @y_scale_division.to_f
+            value = dataset[:data][i]
 
             left = (fieldwidth * field_count)
             left += (field_width/@data.length * 0.2) * (dataset_count+1)
 
-            length = (value.abs - (minvalue > 0 ? minvalue : 0)) * unit_size
-            # top is 0 if value is negative
-            top = bottom - (((value < 0 ? 0 : value) - minvalue) * unit_size)
+            min = @override_minvalue ? @override_minvalue : minvalue
+            length = (value.abs - (min > 0 ? min : 0))/@y_scale_division.to_f * unit_size
+            top = bottom - (((value < 0 ? 0 : value) - min)/@y_scale_division.to_f * unit_size)
             left += bar_width * dataset_count if stack == :side
 
             @graph.add_element( "rect", {
