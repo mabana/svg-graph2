@@ -64,7 +64,7 @@ module SVG
       end
 
       def separate_comma(number)
-        number.to_i.to_s.chars.to_a.reverse.each_slice(3).map(&:join).join(",").reverse
+        number.to_i.to_s.gsub /(\d)(?=(\d\d\d)+(?!\d))/, '\1,'
       end
 
       def get_css
