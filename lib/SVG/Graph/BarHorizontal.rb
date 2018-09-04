@@ -76,6 +76,7 @@ module SVG
         maxvalue = max_value
         minvalue = min_value
         range = maxvalue  - minvalue
+        return [separate_comma(0)] if range == 0
         unrounded_tick_size = range / 10
         x = (Math.log10(unrounded_tick_size) - 1).ceil
         pow10x = 10 ** x
