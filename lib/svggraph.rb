@@ -1,7 +1,4 @@
 module SVG
-  module Graph
-    VERSION = '2.1.2'
-  end
 end
 require_relative 'SVG/Graph/DataPoint'
 require_relative 'SVG/Graph/BarBase'
